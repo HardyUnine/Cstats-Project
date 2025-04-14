@@ -1,0 +1,168 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsmath}
+
+\title{report cstats}
+\author{Tim Wyrfell}
+\date{April 2025}
+
+\begin{document}
+
+\maketitle
+
+\section*{Hypothesis Testing}
+
+\subsection*{Relationship Between Overall Quality and Sale Price}
+
+\subsubsection*{1. Introduction}
+We aim to test the hypothesis that the variable \texttt{OverallQual} (Overall Quality) has an effect on \texttt{SalePrice}. Formally, our hypotheses are:
+\[
+\begin{aligned}
+H_0 &: \beta_{\text{OverallQual}} = 0 \quad (\text{OverallQual does not affect SalePrice}),\\
+H_1 &: \beta_{\text{OverallQual}} \neq 0 \quad (\text{OverallQual affects SalePrice}).
+\end{aligned}
+\]
+
+\subsubsection*{2. Methods}
+We fit a simple linear regression model:
+\[
+\text{SalePrice} = \beta_0 + \beta_1 \times (\text{OverallQual}) + \varepsilon
+\]
+where \(\beta_0\) is the intercept, \(\beta_1\) is the slope for \texttt{OverallQual}, and \(\varepsilon\) is the error term.
+
+\subsubsection*{3. Results}
+
+The R output for the regression model is summarized below. The estimated model coefficients, their standard errors, t-statistics, p-values, and confidence intervals are as follows:
+
+\[
+\begin{aligned}
+\text{Intercept}:\quad & \hat{\beta}_0 = 172639.63, \\
+& \text{Std. Error} = 1873.01,\quad t \approx 92.17,\quad p < 0.001, \\
+& 95\%\ \text{CI} = [168965.55,\ 176313.71],\\
+\\
+\text{OverallQual}:\quad & \hat{\beta}_1 = 1076.57, \\
+& \text{Std. Error} = 299.86,\quad t \approx 3.59,\quad p \approx 0.00034, \\
+& 95\%\ \text{CI} = [488.36,\ 1664.78].\\
+\end{aligned}
+\]
+
+\subsubsection*{4. Interpretation}
+
+\begin{itemize}
+    \item The intercept, \(\hat{\beta}_0\), represents the mean \texttt{SalePrice} when \texttt{OverallQual} = 0, which is not practically meaningful but a necessary reference point for the regression.
+    \item The slope, \(\hat{\beta}_1\approx 1076.57\), indicates that for every 1-unit increase in \texttt{OverallQual}, the expected \texttt{SalePrice} increases by about \$1076.57 on average, holding all else constant.
+    \item The 95\% confidence interval for \(\beta_1\) does not contain 0, suggesting a statistically significant relationship (p-value \(\approx 0.00034\)).
+    
+\end{itemize}
+
+\subsubsection*{5. Conclusion}
+Therefore, we reject the null hypothesis \(H_0\) and conclude that \texttt{OverallQual} has a significant effect on \texttt{SalePrice}.
+\vspace{1em}
+
+\subsection*{Impact of Construction Year on Sale Price}
+
+\subsubsection*{1. Introduction}
+We aim to test the hypothesis that the variable \texttt{YearBuilt} (the year a house was constructed) has an effect on \texttt{SalePrice}. Formally:
+\[
+\begin{aligned}
+H_0 &: \beta_{\text{YearBuilt}} = 0 \quad (\text{YearBuilt does not affect SalePrice}),\\
+H_1 &: \beta_{\text{YearBuilt}} \neq 0 \quad (\text{YearBuilt affects SalePrice}).
+\end{aligned}
+\]
+
+\subsubsection*{2. Methods}
+We fit a simple linear regression model:
+\[
+\text{SalePrice} = \beta_0 + \beta_1 \times (\text{YearBuilt}) + \varepsilon,
+\]
+where:
+\begin{itemize}
+    \item \(\beta_0\) is the intercept,
+    \item \(\beta_1\) is the slope for \texttt{YearBuilt},
+    \item \(\varepsilon\) is the error term.
+\end{itemize}
+
+\subsubsection*{3. Results}
+
+Using R, we obtained the following estimates:
+\[
+\begin{aligned}
+&\hat{\beta}_0 \approx 170400,
+  \quad \text{Std.\ Error} \approx 28100,
+  \quad t \approx 6.07,
+  \quad p < 0.001, \\
+&\hat{\beta}_1 \approx 4.45,
+  \quad \text{Std.\ Error} \approx 14.24,
+  \quad t \approx 0.31,
+  \quad p \approx 0.755, \\
+& 95\%\text{ CI for } \beta_1: [-23.48,\ 32.38].
+\end{aligned}
+\]
+
+\subsubsection*{4. Interpretation}
+
+\begin{itemize}
+    \item The slope coefficient, \(\hat{\beta}_1\approx 4.45\), suggests that for every additional year (i.e., a 1-year increase in \texttt{YearBuilt}), the expected \texttt{SalePrice} increases by about \$4.45 \textit{on average}, controlling for nothing else in this simple model.
+    \item The corresponding p-value (\(\approx 0.755\)) is much greater than common significance levels (e.g., 0.05). Therefore, we fail to reject the null hypothesis \(H_0\). 
+    \item Additionally, the 95\% confidence interval for \(\beta_1\) is quite wide (\([-23.48,\ 32.38]\)) and includes 0, reinforcing that there is no strong evidence of a significant relationship (in this simple model) between \texttt{YearBuilt} and \texttt{SalePrice}.
+    \item The coefficient of determination \(R^2\) is near 0, indicating that \texttt{YearBuilt} alone explains very little of the variance in \texttt{SalePrice}.
+\end{itemize}
+
+\subsubsection*{5. Conclusion}
+From the above analysis, there is insufficient evidence to conclude that \texttt{YearBuilt} significantly affects \texttt{SalePrice} based on a simple linear model. Hence, at typical significance levels, we \emph{fail to reject} \(H_0\). In practice, other variables (or interactions) might be necessary to explain more variation in \texttt{SalePrice}.
+
+\vspace{1em}
+
+\subsection*{Effect of Living Area on Sale Price}
+
+\subsubsection*{1. Introduction}
+We want to test whether the living area, \texttt{GrLivArea}, has a statistically significant effect on \texttt{SalePrice}. Formally:
+\[
+\begin{aligned}
+H_0 &: \beta_{\text{GrLivArea}} = 0 \quad (\text{GrLivArea does not affect SalePrice}),\\
+H_1 &: \beta_{\text{GrLivArea}} \neq 0 \quad (\text{GrLivArea affects SalePrice}).
+\end{aligned}
+\]
+
+\subsubsection*{2. Methods}
+We fit a simple linear regression:
+\[
+\text{SalePrice} = \beta_0 + \beta_1 \times \text{GrLivArea} + \varepsilon.
+\]
+\begin{itemize}
+    \item \(\beta_0\) is the intercept (mean sale price when \texttt{GrLivArea} = 0).
+    \item \(\beta_1\) is the slope associated with \texttt{GrLivArea}.
+    \item \(\varepsilon\) is the random error term.
+\end{itemize}
+
+\subsubsection*{3. Results}
+After running the model in R, the key results are:
+
+\[
+\begin{aligned}
+& \hat{\beta}_0 \approx 150{,}500, 
+  \quad \text{Std.~Error} \approx 1148, 
+  \quad t \approx 131.132, 
+  \quad p < 0.001, \\
+& \hat{\beta}_1 \approx 19.28, 
+  \quad \text{Std.~Error} \approx 0.73, 
+  \quad t \approx 26.25, 
+  \quad p < 0.001, \\
+& \text{95\% CI for } \beta_1 \approx [17.84,\ 20.72].
+\end{aligned}
+\]
+
+The coefficient of determination \((R^2)\) for this model is about 0.321, indicating that \(\text{GrLivArea}\) alone explains around 32\% of the variability in \(\text{SalePrice}\).
+
+\subsubsection*{4. Interpretation}
+\begin{itemize}
+    \item \(\hat{\beta}_1 \approx 19.28\) suggests that, for every additional square foot of above-grade living area, the expected sale price increases by approximately \$19.28 on average, holding other factors constant.
+    \item The slope's 95\% confidence interval \([17.84,\ 20.72]\) does not include 0.
+    \item The p-value is extremely small (\(< 0.001\)), meaning we reject the null hypothesis \(H_0\) at typical significance levels (e.g. 0.05).
+    \item Thus, there is strong evidence that \(\texttt{GrLivArea}\) is positively related to \(\texttt{SalePrice}\).
+\end{itemize}
+
+\subsubsection*{5. Conclusion}
+Based on this simple linear regression, \texttt{GrLivArea} has a statistically significant positive effect on \texttt{SalePrice}. We reject \(H_0\) in favor of \(H_1\). The effect is also practically meaningful since an increase in one square foot of living area is associated with an estimated increase of about \$19 in sale price.
+
+\end{document}
