@@ -1,14 +1,70 @@
 \documentclass{article}
 \usepackage{graphicx} % Required for inserting images
 \usepackage{amsmath}
-
-\title{report cstats}
-\author{Tim Wyrfell}
+\usepackage{url}
+\title{Midterm Report of Computational Statistics}
+\author{Tanguy Godat, Tim Gouveron, Keenan Hardy}
 \date{April 2025}
 
 \begin{document}
 
 \maketitle
+
+\section{Abstract}
+In this project, we aim to predict house prices using the Ames Housing dataset.\footnote{\url{https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data}} 
+Initially, we focus on three numerical variables---\texttt{OverallQual} (Overall Quality), \texttt{YearBuilt} (Construction Year), and \texttt{GrLivArea} (Living Area)---to explore basic relationships with \texttt{SalePrice}. Later, we plan to incorporate additional categorical features (e.g., \texttt{Neighborhood}, \texttt{ExterQual}, \texttt{KitchenQual}) using dummy encoding or ANOVA to capture their influence on house prices.  
+
+Our approach applies classical statistical inference for exploratory analysis, followed by a regression model. Future steps involve extending the model to include categorical variables and performing more advanced statistical methods (ANOVA, time series, etc.).
+
+\section{Introduction}
+
+\subsection{Objective}
+The goal of this project is to gain hands-on experience applying statistical techniques to a real-world dataset. Specifically, we aim to:
+\begin{itemize}
+    \item Explore the distribution and basic statistics of the \texttt{SalePrice} variable.
+    \item Investigate correlations between \texttt{SalePrice} and selected numerical features.
+    \item Eventually incorporate additional categorical features and advanced methods to improve the predictive power of our models.
+\end{itemize}
+
+\subsection{Dataset}
+The Ames Housing dataset includes extensive details about house sales, such as size, quality, neighborhood, and various design features. We downloaded the dataset from Kaggle. It consists of:
+\begin{itemize}
+    \item \texttt{train.csv}: Features + \texttt{SalePrice} for 1{,}460 houses.
+    \item \texttt{test.csv}: Features for 1{,}459 houses (no \texttt{SalePrice} column).
+\end{itemize}
+
+\section{Methods}
+
+\subsection{Data Loading \& Preprocessing}
+
+\begin{enumerate}
+    \item \textbf{Loading the Data.} We used \texttt{pandas.read\_csv()} to load both \texttt{train.csv} and \texttt{test.csv}.
+    \item \textbf{Handling Missing Values.} After checking the numerical features for missing values, we found that the three numeric features of interest (\texttt{OverallQual}, \texttt{YearBuilt}, \texttt{GrLivArea}) had no missing values. Thus, we initially focus on these complete variables.
+    \item \textbf{Selecting Numeric Features for Preliminary Analysis.}
+    \begin{itemize}
+        \item \texttt{OverallQual}: An ordinal variable from 1--10 indicating the overall material and finish of the house.
+        \item \texttt{YearBuilt}: The original construction year of the house.
+        \item \texttt{GrLivArea}: Above grade (ground) living area in square feet.
+        \item \texttt{SalePrice}: Our target variable.
+    \end{itemize}
+    \item \textbf{(Planned) Categorical Features.}
+    \begin{itemize}
+        \item \texttt{Neighborhood}: A categorical feature with multiple distinct neighborhoods.
+        \item \texttt{ExterQual}: A categorical feature describing external quality.
+        \item \texttt{KitchenQual}: A categorical feature describing kitchen quality.
+    \end{itemize}
+    In future steps, we intend to implement these categorical variables (possibly via dummy encoding or ANOVA) to evaluate their impact on \texttt{SalePrice}.
+\end{enumerate}
+
+\subsection{Classical Statistical Inference}
+
+Before building any prediction models, we computed a few fundamental statistics for \texttt{SalePrice}:
+
+\begin{itemize}
+    \item \textbf{Mean, Median, and Standard Deviation} to get an initial sense of central tendency and spread.
+    \item \textbf{Confidence Interval} for the mean sale price, using a t-distribution approach.
+    \item \textbf{Correlation} among the three numerical predictors (\texttt{OverallQual}, \texttt{YearBuilt}, \texttt{GrLivArea}) and \texttt{SalePrice}, as a preliminary gauge of predictive strength.
+\end{itemize}
 
 \section*{Hypothesis Testing}
 
@@ -32,7 +88,7 @@ where \(\beta_0\) is the intercept, \(\beta_1\) is the slope for \texttt{Overall
 
 \subsubsection*{3. Results}
 
-The R output for the regression model is summarized below. The estimated model coefficients, their standard errors, t-statistics, p-values, and confidence intervals are as follows:
+The regression model coefficients (estimated via R or Python) are summarized below:
 
 \[
 \begin{aligned}
@@ -49,20 +105,20 @@ The R output for the regression model is summarized below. The estimated model c
 \subsubsection*{4. Interpretation}
 
 \begin{itemize}
-    \item The intercept, \(\hat{\beta}_0\), represents the mean \texttt{SalePrice} when \texttt{OverallQual} = 0, which is not practically meaningful but a necessary reference point for the regression.
-    \item The slope, \(\hat{\beta}_1\approx 1076.57\), indicates that for every 1-unit increase in \texttt{OverallQual}, the expected \texttt{SalePrice} increases by about \$1076.57 on average, holding all else constant.
-    \item The 95\% confidence interval for \(\beta_1\) does not contain 0, suggesting a statistically significant relationship (p-value \(\approx 0.00034\)).
-    
+    \item The intercept, \(\hat{\beta}_0\), represents the mean \texttt{SalePrice} when \texttt{OverallQual} = 0 (a necessary but not practically meaningful reference).
+    \item The slope, \(\hat{\beta}_1\approx 1076.57\), indicates that for every 1-unit increase in \texttt{OverallQual}, the expected \texttt{SalePrice} increases by about \$1{,}076.57 on average.
+    \item The 95\% confidence interval for \(\beta_1\) does not contain 0, suggesting a statistically significant relationship (\(p \approx 0.00034\)).
 \end{itemize}
 
 \subsubsection*{5. Conclusion}
-Therefore, we reject the null hypothesis \(H_0\) and conclude that \texttt{OverallQual} has a significant effect on \texttt{SalePrice}.
+We reject the null hypothesis \(H_0\) and conclude that \texttt{OverallQual} has a significant effect on \texttt{SalePrice}.
+
 \vspace{1em}
 
 \subsection*{Impact of Construction Year on Sale Price}
 
 \subsubsection*{1. Introduction}
-We aim to test the hypothesis that the variable \texttt{YearBuilt} (the year a house was constructed) has an effect on \texttt{SalePrice}. Formally:
+We aim to test whether \texttt{YearBuilt} (the year a house was constructed) has an effect on \texttt{SalePrice}. Formally:
 \[
 \begin{aligned}
 H_0 &: \beta_{\text{YearBuilt}} = 0 \quad (\text{YearBuilt does not affect SalePrice}),\\
@@ -75,16 +131,11 @@ We fit a simple linear regression model:
 \[
 \text{SalePrice} = \beta_0 + \beta_1 \times (\text{YearBuilt}) + \varepsilon,
 \]
-where:
-\begin{itemize}
-    \item \(\beta_0\) is the intercept,
-    \item \(\beta_1\) is the slope for \texttt{YearBuilt},
-    \item \(\varepsilon\) is the error term.
-\end{itemize}
+where \(\beta_0\) is the intercept, \(\beta_1\) is the slope for \texttt{YearBuilt}, and \(\varepsilon\) is the error term.
 
 \subsubsection*{3. Results}
 
-Using R, we obtained the following estimates:
+From R or Python output, we get:
 \[
 \begin{aligned}
 &\hat{\beta}_0 \approx 170400,
@@ -102,21 +153,21 @@ Using R, we obtained the following estimates:
 \subsubsection*{4. Interpretation}
 
 \begin{itemize}
-    \item The slope coefficient, \(\hat{\beta}_1\approx 4.45\), suggests that for every additional year (i.e., a 1-year increase in \texttt{YearBuilt}), the expected \texttt{SalePrice} increases by about \$4.45 \textit{on average}, controlling for nothing else in this simple model.
-    \item The corresponding p-value (\(\approx 0.755\)) is much greater than common significance levels (e.g., 0.05). Therefore, we fail to reject the null hypothesis \(H_0\). 
-    \item Additionally, the 95\% confidence interval for \(\beta_1\) is quite wide (\([-23.48,\ 32.38]\)) and includes 0, reinforcing that there is no strong evidence of a significant relationship (in this simple model) between \texttt{YearBuilt} and \texttt{SalePrice}.
-    \item The coefficient of determination \(R^2\) is near 0, indicating that \texttt{YearBuilt} alone explains very little of the variance in \texttt{SalePrice}.
+    \item The slope coefficient, \(\hat{\beta}_1\approx 4.45\), suggests that each additional year in \texttt{YearBuilt} leads to an expected \$4.45 increase in \texttt{SalePrice}, on average, holding other factors constant.
+    \item The p-value (\(\approx 0.755\)) is much larger than 0.05, so we fail to reject \(H_0\).
+    \item The 95\% CI includes 0 (from -23.48 to 32.38), reinforcing the lack of evidence for a significant relationship.
+    \item The coefficient of determination \(R^2\) is near 0, indicating \texttt{YearBuilt} alone explains very little variance in \texttt{SalePrice}.
 \end{itemize}
 
 \subsubsection*{5. Conclusion}
-From the above analysis, there is insufficient evidence to conclude that \texttt{YearBuilt} significantly affects \texttt{SalePrice} based on a simple linear model. Hence, at typical significance levels, we \emph{fail to reject} \(H_0\). In practice, other variables (or interactions) might be necessary to explain more variation in \texttt{SalePrice}.
+There is insufficient evidence to conclude that \texttt{YearBuilt} significantly affects \texttt{SalePrice} in a simple linear model. We fail to reject \(H_0\).
 
 \vspace{1em}
 
 \subsection*{Effect of Living Area on Sale Price}
 
 \subsubsection*{1. Introduction}
-We want to test whether the living area, \texttt{GrLivArea}, has a statistically significant effect on \texttt{SalePrice}. Formally:
+We test whether the living area \texttt{GrLivArea} has a statistically significant effect on \texttt{SalePrice}. Formally:
 \[
 \begin{aligned}
 H_0 &: \beta_{\text{GrLivArea}} = 0 \quad (\text{GrLivArea does not affect SalePrice}),\\
@@ -125,19 +176,14 @@ H_1 &: \beta_{\text{GrLivArea}} \neq 0 \quad (\text{GrLivArea affects SalePrice}
 \]
 
 \subsubsection*{2. Methods}
-We fit a simple linear regression:
+A simple linear regression model is:
 \[
 \text{SalePrice} = \beta_0 + \beta_1 \times \text{GrLivArea} + \varepsilon.
 \]
-\begin{itemize}
-    \item \(\beta_0\) is the intercept (mean sale price when \texttt{GrLivArea} = 0).
-    \item \(\beta_1\) is the slope associated with \texttt{GrLivArea}.
-    \item \(\varepsilon\) is the random error term.
-\end{itemize}
+Here, \(\beta_0\) is the intercept, \(\beta_1\) is the slope for \texttt{GrLivArea}, and \(\varepsilon\) is the error term.
 
 \subsubsection*{3. Results}
-After running the model in R, the key results are:
-
+Representative output from R or Python:
 \[
 \begin{aligned}
 & \hat{\beta}_0 \approx 150{,}500, 
@@ -152,17 +198,16 @@ After running the model in R, the key results are:
 \end{aligned}
 \]
 
-The coefficient of determination \((R^2)\) for this model is about 0.321, indicating that \(\text{GrLivArea}\) alone explains around 32\% of the variability in \(\text{SalePrice}\).
+The coefficient of determination (\(R^2\)) is about 0.321, indicating \(\texttt{GrLivArea}\) alone explains around 32\% of the variance in \(\texttt{SalePrice}\).
 
 \subsubsection*{4. Interpretation}
 \begin{itemize}
-    \item \(\hat{\beta}_1 \approx 19.28\) suggests that, for every additional square foot of above-grade living area, the expected sale price increases by approximately \$19.28 on average, holding other factors constant.
-    \item The slope's 95\% confidence interval \([17.84,\ 20.72]\) does not include 0.
-    \item The p-value is extremely small (\(< 0.001\)), meaning we reject the null hypothesis \(H_0\) at typical significance levels (e.g. 0.05).
-    \item Thus, there is strong evidence that \(\texttt{GrLivArea}\) is positively related to \(\texttt{SalePrice}\).
+    \item \(\hat{\beta}_1 \approx 19.28\) suggests that each additional square foot of living area increases \texttt{SalePrice} by about \$19.28 on average, holding other factors constant.
+    \item The 95\% CI for \(\beta_1\) is \([17.84,\ 20.72]\), which excludes 0, indicating significance.
+    \item The p-value is \(< 0.001\), so we reject \(H_0\) at conventional significance levels.
 \end{itemize}
 
 \subsubsection*{5. Conclusion}
-Based on this simple linear regression, \texttt{GrLivArea} has a statistically significant positive effect on \texttt{SalePrice}. We reject \(H_0\) in favor of \(H_1\). The effect is also practically meaningful since an increase in one square foot of living area is associated with an estimated increase of about \$19 in sale price.
+We conclude that \texttt{GrLivArea} has a statistically significant, positive effect on \texttt{SalePrice}. We reject \(H_0\) in favor of \(H_1\), and note that the effect is practically meaningful because one additional square foot corresponds to an estimated \$19 increase in \texttt{SalePrice}.
 
 \end{document}
